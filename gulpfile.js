@@ -8,6 +8,7 @@ const pug = require('gulp-pug');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 const concat = require('gulp-concat');
+const browserSync = require('browser-sync').create();
 const imagemin = require('gulp-imagemin');
 
 const cache = require('gulp-cache');
@@ -32,9 +33,8 @@ const minImages =()=>{
     return gulp.src('src/image/*.*')
     .pipe(cache(imagemin({
         interlaced: true,
-			progressive: true,
-			svgoPlugins: [{removeViewBox: false}],
-			
+		progressive: true,
+		svgoPlugins: [{removeViewBox: false}],
     })))
     .pipe(gulp.dest('prodaction/image'))
 }
@@ -45,18 +45,18 @@ const watch =()=>{
     gulp.watch('src/styles/**/*.css',styles)
 }
 
-// const server = ()=>{
-//     browserSync.init({
-//         server:{
-//             baseDir:'./prodaction'
-//         },
-//         notify:false
-//     });
-//     browserSync.watch('prodaction',browserSync.reload)
-// }
+const server = ()=>{
+    browserSync.init({
+        server:{
+            baseDir:'prodaction'
+        },
+        notify:false
+    });
+    browserSync.watch('prodaction',browserSync.reload)
+}
 
 exports.default = gulp.series(
     
     gulp.parallel(styles,pugFile,minImages),
-    gulp.parallel(watch)
+    gulp.parallel(watch,server)
     )
