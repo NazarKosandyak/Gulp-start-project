@@ -30,7 +30,12 @@ const pugFile = ()=>{
 
 const minImages =()=>{
     return gulp.src('src/image/*.*')
-    .pipe(cache(imagemin()))
+    .pipe(cache(imagemin({
+        interlaced: true,
+			progressive: true,
+			svgoPlugins: [{removeViewBox: false}],
+			
+    })))
     .pipe(gulp.dest('prodaction/image'))
 }
 
